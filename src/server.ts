@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 import app from "./app";
 
-const port : Number = 5000;
+dotenv.config()
+const port: Number = 5000;
 
 // database connection
 async function main() {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/practice-nlwd");
+    await mongoose.connect(`${process.env.DB_LOCAL}`);
     console.log("🔸 Database connection established...");
 
     //   run the server
