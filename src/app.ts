@@ -1,6 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const app: Application = express();
 // cors
@@ -16,14 +16,14 @@ app.get("/", (req: Request, res: Response) => {
   interface IUser {
     id: string;
     role: string;
-    password: string;
     name: {
       firstName: string;
       lastName: string;
     };
+    email?: string;
+    password: string;
     dateOfBirth: string;
     gender: "male" | "female";
-    email?: string;
     contactNo: string;
     emergenctContactNo: string;
     presentAddress: string;
@@ -41,10 +41,6 @@ app.get("/", (req: Request, res: Response) => {
       type: String,
       required: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
     name: {
       firstName: {
         type: String,
@@ -55,16 +51,20 @@ app.get("/", (req: Request, res: Response) => {
         required: true,
       },
     },
-    dateOfBirth: {
-      type: String,
-    },
-      gender: {
-        type: String,
-        enum: ["male", "female"],
-    },
     email: {
       type: String,
       unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    dateOfBirth: {
+      type: String,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
     },
     contactNo: {
       type: String,
@@ -83,7 +83,35 @@ app.get("/", (req: Request, res: Response) => {
       required: true,
     },
   });
-  //   res.send("Practice server running..!");
+
+  // model
+  const User = model<IUser>("User", userSchema);
+
+  // instance create
+  const createUserToDB = async () => {
+    const user = new User({
+      id: "002",
+      role: "Student",
+      name: {
+        firstName: "Jhon",
+        lastName: "Wick 2",
+      },
+      email: "jhon2@gmail.com",
+      password: "asdf",
+      dateOfBirth: "2-4-2000",
+      gender: "male",
+      contactNo: "01844675433",
+      emergenctContactNo: "01988765545",
+      presentAddress: "Dhaka, Bangladesh",
+      permentAddress: "Rajshahi, Bangladesh",
+    });
+
+      await user.save();
+      console.log(user)
+  };
+
+  createUserToDB();
+    res.send("Server is running");
 });
 
 export default app;
