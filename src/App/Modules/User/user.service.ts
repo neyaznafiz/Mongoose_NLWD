@@ -15,8 +15,8 @@ export const getUsersFromDB = async (): Promise<IUser[]> => {
   return users;
 };
 
-// get user by id
+// get user by id with queries
 export const getUserByID = async (payload: string): Promise<IUser | null> => {
-  const user = await User.findOne({ id: payload });
+  const user = await User.findOne({ id: payload }, { name: 1, id: 1, role: 1 });
   return user;
 };
